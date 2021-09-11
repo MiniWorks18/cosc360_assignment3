@@ -1,16 +1,19 @@
 <template>
-  <div>
+  <div class="modal-open" style="overflow: hidden; padding-right: 17px">
+    <div class="modal-backdrop fade show"></div>
     <div
-      class="fade show"
-      id="reservationModal"
+      class="modal fade show"
+      id="updateForm"
       tabindex="-1"
-      aria-labelledby="reservationModalLabel"
-      aria-hidden="true"
+      aria-labelledby="updateFormLabel"
+      style="display: block"
+      aria-modal="true"
+      role="diaglo"
     >
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="reservationModalLabel">
+            <h5 class="modal-title" id="updateFormLabel">
               Update {{ getDate(this.$store.state.updateForm.date_reserved) }}
             </h5>
             <button
@@ -109,7 +112,7 @@
               </button>
               <button
                 type="button"
-                data-bs-target="#reservationModal"
+                data-bs-target="#updateForm"
                 class="btn btn-primary"
                 @click="submit()"
               >
@@ -133,11 +136,6 @@ export default {
       let time = this.$store.state.updateForm[0];
       let date = this.$store.state.updateForm[1];
       nam, num, ppl, spc, time, date;
-
-      ///////// Up to here, trying to get local validation working instead of checking with server
-      if (this.$state.methods.validate) {
-        console.log("Validated");
-      }
 
       if (this.validate(nam, num, time, date) == 1) {
         let payload = JSON.stringify({

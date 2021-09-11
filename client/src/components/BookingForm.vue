@@ -1,11 +1,14 @@
 <template>
-  <div>
+  <div class="modal-open">
+    <div class="modal-backdrop fade show"></div>
     <div
-      class="fade show"
+      class="modal fade show"
       id="reservationModal"
       tabindex="-1"
       aria-labelledby="reservationModalLabel"
-      aria-hidden="true"
+      style="display: block"
+      aria-modal="true"
+      role="dialog"
     >
       <div class="modal-dialog">
         <div class="modal-content">

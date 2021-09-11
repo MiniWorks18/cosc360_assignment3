@@ -7,10 +7,15 @@ const mongoose = require('mongoose');
 const { MONGO_IP, MONGO_PORT, MONGO_USERNAME, MONGO_PASSWORD, PORT } = require("./config/config");
 const app = express();
 
+const chatty = require('./services/status')
+const WebSocketServer = require('websocket').server
+
 const swaggerJSDoc = require('swagger-jsdoc')
 const swaggerOptions = require('./config/swagger')
 const swaggerUi = require('swagger-ui-express')
 const cors = require('cors')
+
+let wsClients = []
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
@@ -34,13 +39,24 @@ var corsOptions = {
   "methods": "GET,POST,DELETE,PUT",
   "origin": "*"
 }
+
+const server = app.listen(PORT, () => console.log(`Express is listening
+on port ${PORT}!`))
+
 app.use(cors(corsOptions));
 // Helps provide confirmation of connection, remove later
 app.get('/', (req, res) => {
   res.json({ message: 'Hello World!' });
 });
 
-app.listen(PORT, () => console.log(`Express is listening on port ${PORT}!`))
+const wsServer = new WebSocketServer({
+  httpServer: server,
+  autoAcceptConnections: false
+})
+
+
+
+// app.listen(PORT, () => console.log(`Express is listening on port ${PORT}!`))
 
 const reservationRouter = require('./routes/reservation');
 app.use('/reservations', reservationRouter);
@@ -50,6 +66,34 @@ app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.status(err.status || 500);
   res.send(err);
+})
+
+wsServer.on('request', (req) => {
+  const pathname = req.resourceURL.pathname
+  const connection = req.accept(null, req.origin)
+  // We only accept connection from allowed origins
+  if (!chatty.originIsAllowed(req.origin)) {
+    req.reject();
+    return;
+  }
+
+  // We only accept connection from allowed path
+  if (!chatty.pathnameIsAllowed(pathname, req.origin)) {
+    req.reject();
+    return;
+  }
+
+  // Assign user ID to client and keep track of active connections
+  wsClients = chatty.assignUser(wsClients, connection, req.origin)
+
+  // Handle incoming messages
+  connection.on('message', (message) =>
+    chatty.incomingMessageHandler(message, wsClients))
+  // Handle disconnection - remove disconnected client
+  connection.on('close', (connection) => {
+    console.log((new Date()) + " User " + userId + " disconnected.")
+    delete wsClients[userId]
+  })
 })
 
 // Setup redirect documentation requests to swagger

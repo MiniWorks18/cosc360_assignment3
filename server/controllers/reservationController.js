@@ -3,6 +3,7 @@ const { validationResult } = require('express-validator')
 const reservation = require('../models/reservation')
 const mongoose = require('mongoose')
 const { isRestaurantExist } = require('../services/reservationValidation')
+const chatty = require('../services/status')
 
 let clients = [];
 const sendEvents = (newReservation) => {
@@ -23,6 +24,7 @@ exports.reservationAddedNotification = (req, res) => {
         res
     };
     clients.push(newClient);
+    // clients.forEach(client => client.res.write("Hi"))
     res.on('close', () => console.log(`connection closed!`));
 }
 
@@ -76,6 +78,7 @@ exports.create_reservation = async (req, res) => {
                 "item": output_reservation
             }
             if (output_reservation) {
+                /// Up to here, going to implement a notifications system using websockets
                 res.status(201).json(response)
                 return sendEvents(response)
             }

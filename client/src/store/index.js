@@ -10,7 +10,8 @@ export default createStore({
     updateFormShow: false,
     reservations: null,
     reservationsShow: false,
-    errors: null
+    errors: null,
+    notificationsShow: ""
 
   },
   mutations: {
@@ -86,6 +87,7 @@ export default createStore({
           state.updateForm = r
           state.updateFormShow = true
           state.bookingFormShow = false
+          state.reservationsShow = false
           found = true
         }
       })
@@ -106,6 +108,7 @@ export default createStore({
           console.log(data)
           if (res.ok) {
             state.updateFormShow = false
+            state.bookingFormShow = false
             state.reservationsShow = true
             this.dispatch('getReservations')
           } else {
@@ -143,6 +146,14 @@ export default createStore({
           false
         );
       });
+    },
+    notificationsToggle(state) {
+      console.log("toggle")
+      if (state.notificationsShow == "show") {
+        state.notificationsShow = ""
+      } else {
+        state.notificationsShow = "show"
+      }
     }
   },
   actions: {
@@ -178,6 +189,12 @@ export default createStore({
     },
     updateReservation({ commit }, payload) {
       commit('updateReservation', payload)
+    },
+    validate({ commit }) {
+      commit('validate')
+    },
+    notificationsToggle({ commit }) {
+      commit('notificationsToggle')
     }
   },
   modules: {
