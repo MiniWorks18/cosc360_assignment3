@@ -24,10 +24,10 @@ exports.validateData = [
     body('seats').trim().isInt({ min: 1 }).
         withMessage('number of seats must be greater than 0'),
 
-    body('date_reserved').isDate().
-        withMessage('invalid date format'),
+    // body('date_reserved').isDate().
+    //     withMessage('invalid date format'),
 
-    body('date_reserved').isAfter().
-        withMessage("reservation must be at a future date")
+    // body('date_reserved').isAfter().
+    //     withMessage("reservation must be at a future date")
 
 ]

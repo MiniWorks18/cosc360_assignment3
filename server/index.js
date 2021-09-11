@@ -10,6 +10,7 @@ const app = express();
 const swaggerJSDoc = require('swagger-jsdoc')
 const swaggerOptions = require('./config/swagger')
 const swaggerUi = require('swagger-ui-express')
+const cors = require('cors')
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
@@ -29,6 +30,11 @@ const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
 db.once('open', () => console.log('Connected to database!'));
 
+var corsOptions = {
+  "methods": "GET,POST,DELETE,PUT",
+  "origin": "*"
+}
+app.use(cors(corsOptions));
 // Helps provide confirmation of connection, remove later
 app.get('/', (req, res) => {
   res.json({ message: 'Hello World!' });
@@ -57,7 +63,10 @@ const restaurants = [
     sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. \
     A condimentum vitae sapien pellentesque habitant morbi tristique senectus et. \
     Mi bibendum neque egestas congue. Lectus quam id leo in vitae turpis massa.",
-    img: "stockrestaurant.png",
+    img: "boost.jpg",
+    id: 1,
+    dates:
+      [["2021-09-14", ["12:30 PM", "8:30 PM", "9:00 PM"]]]
 
   },
   {
@@ -66,11 +75,19 @@ const restaurants = [
     tempor incididunt ut labore et dolore magna aliqua. Nullam non nisi est sit amet \
     facilisis. Elit duis tristique sollicitudin nibh. Lobortis elementum nibh tellus \
     molestie nunc non blandit massa enim.",
-    img: "stockrestaurant.png"
+    img: "mcdonalds.png",
+    id: 2,
+    dates:
+      [["2021-09-11", ["12:30 PM", "8:30 PM", "9:00 PM"]],
+      ["2021-09-12", ["12:30 PM", "8:30 PM", "9:00 PM"]],
+      ["2021-09-13", ["12:30 PM", "8:30 PM", "9:00 PM"]]],
   }
 ]
 
-app.get('/restaurants', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080')
-  res.json(restaurants)
-})
+
+app.get('/restaurants',
+  (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080')
+    res.json(restaurants)
+  }
+)

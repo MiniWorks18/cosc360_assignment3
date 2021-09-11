@@ -1,31 +1,39 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col">
-        <h1>Restaurants</h1>
-        <div
-          class="alert collapse alert-success"
-          id="newReservation"
-          role="alert"
-          aria-expanded="false"
-          aria-controls="newReservation"
-        >
-          New Reservation Complete!
+  <div>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <h1>Restaurants</h1>
+          <div
+            class="alert collapse alert-success"
+            id="newReservation"
+            role="alert"
+            aria-expanded="false"
+            aria-controls="newReservation"
+          >
+            New Reservation Complete!
+          </div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-xl">
-        <div class="row row-cols-1 row-cols-md-2 g-4">
-          <Restaurant
-            v-for="i in this.$store.state.restaurants"
-            :key="i"
-            :title="i.title"
-            :info="i.info"
-            :img="i.img"
+      <div class="row">
+        <div class="col-xl">
+          <div class="row row-cols-1 row-cols-md-2 g-4">
+            <Restaurant
+              v-for="i in this.$store.state.restaurants"
+              :key="i"
+              :title="i.title"
+              :info="i.info"
+              :img="i.img"
+              :id="i.id"
+            />
+          </div>
+          <AboutRestaurant
+            :title="this.$store.state.about.title"
+            :info="this.$store.state.about.info"
+            :img="this.$store.state.about.img"
+            :dates="this.$store.state.about.dates"
           />
         </div>
-        <AboutRestaurant />
       </div>
     </div>
   </div>
@@ -39,7 +47,7 @@ export default {
     AboutRestaurant,
   },
   created() {
-    this.$store.dispatch("initRestaurants");
+    document.title = "DBT - Browse";
   },
 };
 </script>

@@ -15,8 +15,8 @@
               class="d-inline-block align-text-top"
             />
           </a>
-          <a class="navbar-brand" href="index.html"
-            ><i class="bi bi-geo-alt-fill"></i> DropBearTables</a
+          <router-link to="/" class="navbar-brand" href="index.html"
+            ><i class="bi bi-geo-alt-fill"></i> DropBearTables</router-link
           >
           <button
             class="navbar-toggler"
@@ -32,21 +32,73 @@
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="index.html"
-                  >Reservations</a
+                <a
+                  class="nav-link active"
+                  href="#reservation-modal"
+                  data-bs-toggle="modal"
+                  data-bs-target="#reservation-modal"
+                  @click="this.$store.state.reservationsShow = true"
+                >
+                  Reservations</a
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="graph.html"
-                  >Graph</a
-                >
+                <router-link class="nav-link active" to="/graph">
+                  Graph
+                </router-link>
               </li>
             </ul>
+            <div class="dropdown">
+              <button
+                class="btn btn-secondary dropdown-toggle"
+                type="button"
+                id="dropdownMenu2"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Notifications
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                <li>
+                  <a
+                    href=""
+                    aria-current="page"
+                    data-bs-toggle="modal"
+                    data-bs-target="#reservation-modal"
+                    class="dropdown-item nav-link h2 p-4"
+                    >New reservation made</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href=""
+                    aria-current="page"
+                    data-bs-toggle="modal"
+                    data-bs-target="#reservation-modal"
+                    class="dropdown-item nav-link h2 p-4"
+                    >New reservation made</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href=""
+                    aria-current="page"
+                    data-bs-toggle="modal"
+                    data-bs-target="#reservation-modal"
+                    class="dropdown-item nav-link h2 p-4"
+                    >Reservation canceled</a
+                  >
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </nav>
     </div>
     <router-view />
+    <Reservations v-if="this.$store.state.reservationsShow" />
+    <BookingForm v-if="this.$store.state.bookingFormShow" />
+    <UpdateForm v-if="this.$store.state.updateFormShow" />
   </div>
 </template>
 
@@ -76,3 +128,26 @@
 //   }
 // }
 </style>
+
+<script>
+import Reservations from "@/components/Reservations.vue";
+import BookingForm from "@/components/BookingForm.vue";
+import UpdateForm from "@/components/UpdateForm.vue";
+
+export default {
+  components: {
+    Reservations,
+    BookingForm,
+    UpdateForm,
+  },
+  data() {
+    return {};
+  },
+  methods: {
+    showModal() {},
+  },
+  created() {
+    this.$store.dispatch("initRestaurants");
+  },
+};
+</script>

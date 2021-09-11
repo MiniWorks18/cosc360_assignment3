@@ -36,7 +36,7 @@ exports.create_reservation = async (req, res) => {
         if (!isRestaurantExist(req.body.restaurant)) {
             let err = {
                 "restaurant": req.body.restaurant,
-                "message": "restaurant does not exist",
+                "msg": "restaurant does not exist",
                 "param": "restaurant",
                 "location": "body"
             }
@@ -64,7 +64,7 @@ exports.create_reservation = async (req, res) => {
         if (found_reservation) {
             let err = {
                 "restaurant": reservation.restaurant,
-                "message": "reservation already exists",
+                "msg": "reservation already exists",
                 "param": "restaurant",
                 "location": "body"
             }
@@ -72,7 +72,7 @@ exports.create_reservation = async (req, res) => {
         } else {
             let output_reservation = await reservation.save();
             let response = {
-                "message": "Successfully created reservation",
+                "msg": "Successfully created reservation",
                 "item": output_reservation
             }
             if (output_reservation) {
@@ -93,12 +93,12 @@ exports.delete_reservation = async (req, res) => {
     try {
         let del_reservation = await Reservation.findOneAndDelete({
             // Prefer to use id, use name for testing
-            '_id': req.body.id
+            '_id': req.body._id
             // 'name': req.body.name
         }).exec();
         if (del_reservation) {
             let response = {
-                "message": "Successfully deleted",
+                "msg": "Successfully deleted",
                 "item": del_reservation
             }
             res.status(200).json(response)
@@ -106,9 +106,9 @@ exports.delete_reservation = async (req, res) => {
         } else {
             // Reservation does not exist
             let err = {
-                "restaurant": req.body.restaurant,
-                "message": "id does not match existing reservations",
-                "param": "restaurant",
+                "_id": req.body._id,
+                "msg": "id does not match existing reservations",
+                "param": "_id",
                 "location": "body"
             }
             res.status(404).json({ errors: [err] })
@@ -122,18 +122,36 @@ exports.delete_reservation = async (req, res) => {
 // Update reservations in the database
 exports.update_reservation = async (req, res) => {
     try {
+        let errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() })
+        }
+        if (!isRestaurantExist(req.body.restaurant)) {
+            let err = {
+                "restaurant": req.body.restaurant,
+                "msg": "restaurant does not exist",
+                "param": "restaurant",
+                "location": "body"
+            }
+            return res.status(400).json({ errors: [err] })
+        }
         let upd_reservation = await Reservation.findOneAndUpdate({
             // Prefer to use id, use name for testing
-            '_id': req.body.id
+            '_id': req.body._id
             // 'name': req.body.name
         },
             {
-                'name': req.body.name
+                'name': req.body.name,
+                'restaurant': req.body.restaurant,
+                'seats': req.body.seats,
+                'contact': {
+                    'phone_number': req.body.phone_number
+                }
             }).exec();
 
         if (upd_reservation) {
             let response = {
-                "message": "Successfully updated",
+                "msg": "Successfully updated",
                 "item": upd_reservation
             }
             res.status(200).json(response);
@@ -144,8 +162,8 @@ exports.update_reservation = async (req, res) => {
                 "id": req.body.id,
                 "restaurant": req.body.restaurant,
                 "data_reserved": req.body.date_reserved,
-                "message": "id does not match existing reservations",
-                "param": "restaurant",
+                "msg": "id does not match existing reservations",
+                "param": "id",
                 "location": "body"
             }
             res.status(400).json({ errors: [err] })
@@ -158,6 +176,7 @@ exports.update_reservation = async (req, res) => {
 
 // Get reservation by ID
 exports.get_reservation = async (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080')
     try {
         let gt_reservation = await Reservation.findOne({
             // Prefer to use id, use name for testing
@@ -165,17 +184,18 @@ exports.get_reservation = async (req, res) => {
             // ,'name': req.body.name
         }).exec();
         if (gt_reservation) {
+            console.log(gt_reservation.time.format('hh:mm'))
             res.status(200).json(gt_reservation)
         } else {
             let gt_reservations = await Reservation.find({});
             if (gt_reservations.length > 0) {
                 res.status(200).json({
-                    "message": "id does not match existing reservations",
+                    "msg": "id does not match existing reservations",
                     "all_reservations": gt_reservations
                 })
             } else {
                 let err = {
-                    "message": "Something went wrong, or the database is empty"
+                    "msg": "Something went wrong, or the database is empty"
                 }
                 res.status(404).json({ errors: [err] })
             }

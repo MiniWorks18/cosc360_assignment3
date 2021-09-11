@@ -18,18 +18,30 @@ export default {
     images: {
       type: String,
       require: true,
-      default: "../assets/",
+    },
+    id: {
+      type: Number,
+      require: true,
+      default: 0,
     },
   },
-  data() {
-    return {};
+  methods: {
+    updateAbout() {
+      let payload = {
+        aboutID: this.id,
+      };
+      this.$store.dispatch("updateAbout", payload);
+    },
+    getImgURL() {
+      return require("@/assets/" + this.img);
+    },
   },
 };
 </script>
 <template>
   <div class="col">
     <div class="card">
-      <img :src="images + img" class="card-img-top" alt="..." />
+      <img :src="getImgURL()" class="card-img-top" alt="Restaurant image" />
       <div class="card-body">
         <h5 class="card-title">{{ title }}</h5>
         <p class="card-text">
@@ -37,7 +49,7 @@ export default {
         </p>
         <a
           href="#about-restaurant"
-          onclick="viewRestaurant('boost')"
+          @click="updateAbout()"
           class="btn btn-primary"
           >Check availability</a
         >

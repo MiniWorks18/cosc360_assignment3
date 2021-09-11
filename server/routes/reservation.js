@@ -6,9 +6,10 @@ const reservationValidator = require('../services/reservationValidation')
 // Pass different requests to the correct handlers
 router.get('/notification', reservation_controller.reservationAddedNotification)
 router.post('/', reservationValidator.validateData,
-    reservation_controller.create_reservation)
+    reservation_controller.create_reservation,
+)
 router.delete('/', reservation_controller.delete_reservation)
-router.put('/', reservation_controller.update_reservation)
+router.put('/', reservationValidator.validateData, reservation_controller.update_reservation)
 router.get('/', reservation_controller.get_reservation)
 
 // Swagger documentation

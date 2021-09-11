@@ -1,21 +1,14 @@
 <template>
   <div class="col-xl" id="about-restaurant">
     <div class="row row-cols-1">
-      <p class="display-4">Boost Restaurant</p>
-      <img
-        src="../assets/stock-restaurant.jpg"
-        class="pb-4 float-start"
-        alt="stock restaurant"
-      />
+      <p class="display-4">{{ title }}</p>
+      <img :src="getImgURL()" class="pb-4 float-start" alt="stock restaurant" />
       <p class="px-4 text-center">
-        More about this interesting restaurant that serves food to people who
-        are hungry and could eat food at the specific time they choose to.
-        Alternatively the food may be half eaten and taken home for the customer
-        to eat at a later date.
+        {{ info }}
       </p>
     </div>
     <div class="row row-cols-1 row-cols-md-2 g-4">
-      <TimeSheet />
+      <TimeSheet v-for="i in dates" :key="i" :date="i" :times="i.times" />
     </div>
   </div>
 </template>
@@ -25,6 +18,40 @@ import TimeSheet from "./TimeSheet.vue";
 export default {
   components: {
     TimeSheet,
+  },
+  props: {
+    title: {
+      type: String,
+      require: true,
+    },
+    info: {
+      type: String,
+      require: true,
+    },
+    img: {
+      type: String,
+      require: true,
+    },
+    images: {
+      type: String,
+      require: true,
+      default: "@/assets/stock-restaurant.jpg",
+    },
+    id: {
+      type: Number,
+      require: true,
+      default: 0,
+    },
+    dates: {
+      type: Array,
+      require: true,
+    },
+  },
+  methods: {
+    getImgURL() {
+      return require("@/assets/" + this.img);
+    },
+    created() {},
   },
 };
 </script>

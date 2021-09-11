@@ -38,7 +38,7 @@ const ReservationSchema = new Schema({
     },
     contact: {
         phone_number: {
-            type: Number,
+            type: String,
             require: true
         },
     },
