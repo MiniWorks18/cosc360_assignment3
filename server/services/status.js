@@ -42,5 +42,11 @@ module.exports = {
             )
                 sendMessage(wsClients, data.id, JSON.stringify({ message: '🚀🚀🚀 🌕' }))
         }
+    },
+    sendNotification: (message, wsClients) => {
+        const data = JSON.pase(message.utf8Data)
+        console.log(message)
+        console.log(wsClients)
+        sendMessage(wsClients, data.id, JSON.stringify({ message: "Hello" }))
     }
 }

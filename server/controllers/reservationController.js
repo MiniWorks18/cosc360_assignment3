@@ -3,7 +3,7 @@ const { validationResult } = require('express-validator')
 const reservation = require('../models/reservation')
 const mongoose = require('mongoose')
 const { isRestaurantExist } = require('../services/reservationValidation')
-const chatty = require('../services/status')
+
 
 let clients = [];
 const sendEvents = (newReservation) => {
@@ -17,14 +17,14 @@ exports.reservationAddedNotification = (req, res) => {
     res.setHeader('Connection', 'keep-alive')
     res.setHeader('Content-Type', 'text/event-stream')
     res.setHeader('Cache-Control', 'no-cache')
-    console.log(res)
+    // console.log(res)
     const clientId = Date.now();
     const newClient = {
         id: clientId,
         res
     };
     clients.push(newClient);
-    // clients.forEach(client => client.res.write("Hi"))
+    // clients.forEach(client => console.log(client))
     res.on('close', () => console.log(`connection closed!`));
 }
 

@@ -11,7 +11,8 @@ export default createStore({
     reservations: null,
     reservationsShow: false,
     errors: null,
-    notificationsShow: ""
+    notificationsShow: "",
+    notifications: [{ "msg": "Successfully created reservation", "item": { "_id": "613d6379aeb6f800465a36f0", "restaurant": "subway", "name": "Steveee", "date_reserved": "2021-09-10T00:00:00.000Z", "seats": 3, "contact": { "phone_number": "0499999990" }, "client_id": "613d6379aeb6f800465a36f1", "date_created": "2021-09-12T02:18:33.296Z", "__v": 0 } }]
 
   },
   mutations: {
@@ -154,6 +155,26 @@ export default createStore({
       } else {
         state.notificationsShow = "show"
       }
+    },
+    notificationEvents(state) {
+      const url = 'http://localhost:3000/reservations/notification'
+      const sse = new EventSource(url)
+      /* To listen to the named event "stockAdded" */
+      sse.addEventListener("reservationAdded", (e) => {
+        state.notifications.push(JSON.parse(e.data))
+        console.log('reservationAdded')
+        console.log(e.data)
+        // write your own code to render the data in the UI component(s) when you
+        // ...
+      })
+      /* The event "message" is a special case when the event does not have an
+      event field. It does not handle the case of `event: message`, as the event
+      has a event field. Listening to "message" event is equivalent to using the
+      onmessage property <https://developer.mozilla.org/enUS/docs/Web/API/EventSource/onmessage>*/
+      sse.addEventListener("message", (e) => {
+        console.log('MESSAGE')
+        console.log(e.data)
+      })
     }
   },
   actions: {
@@ -195,6 +216,9 @@ export default createStore({
     },
     notificationsToggle({ commit }) {
       commit('notificationsToggle')
+    },
+    initNotifications({ commit }) {
+      commit('notificationEvents')
     }
   },
   modules: {

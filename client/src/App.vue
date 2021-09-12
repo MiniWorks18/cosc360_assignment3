@@ -64,36 +64,14 @@
                 v-bind:class="this.$store.state.notificationsShow"
                 aria-labelledby="dropdownMenu2"
               >
-                <li>
-                  <a
-                    href=""
-                    aria-current="page"
-                    data-bs-toggle="modal"
-                    data-bs-target="#reservation-modal"
-                    class="dropdown-item nav-link h2 p-4"
-                    >New reservation made</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href=""
-                    aria-current="page"
-                    data-bs-toggle="modal"
-                    data-bs-target="#reservation-modal"
-                    class="dropdown-item nav-link h2 p-4"
-                    >New reservation made</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href=""
-                    aria-current="page"
-                    data-bs-toggle="modal"
-                    data-bs-target="#reservation-modal"
-                    class="dropdown-item nav-link h2 p-4"
-                    >Reservation canceled</a
-                  >
-                </li>
+                <div v-if="this.$store.state.notifications.length > 0">
+                  <Notification
+                    v-for="n in this.$store.state.notifications.length"
+                    :key="n"
+                    :num="n - 1"
+                  />
+                </div>
+                <div v-else style="width: 400">No notifications</div>
               </ul>
             </div>
           </div>
@@ -159,12 +137,14 @@
 import Reservations from "@/components/Reservations.vue";
 import BookingForm from "@/components/BookingForm.vue";
 import UpdateForm from "@/components/UpdateForm.vue";
+import Notification from "@/components/Notification.vue";
 
 export default {
   components: {
     Reservations,
     BookingForm,
     UpdateForm,
+    Notification,
   },
   data() {
     return {};
@@ -174,6 +154,7 @@ export default {
   },
   created() {
     this.$store.dispatch("initRestaurants");
+    this.$store.dispatch("initNotifications");
   },
 };
 </script>

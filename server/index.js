@@ -87,14 +87,22 @@ wsServer.on('request', (req) => {
   wsClients = chatty.assignUser(wsClients, connection, req.origin)
 
   // Handle incoming messages
-  connection.on('message', (message) =>
-    chatty.incomingMessageHandler(message, wsClients))
+  connection.on('message', (message) => {
+    console.log(message)
+    chatty.incomingMessageHandler(message, wsClients)
+  })
   // Handle disconnection - remove disconnected client
   connection.on('close', (connection) => {
     console.log((new Date()) + " User " + userId + " disconnected.")
     delete wsClients[userId]
   })
 })
+
+module.exports = {
+  sendNoti: (message) => {
+    chatty.sendNotification(message, wsClients)
+  }
+}
 
 // Setup redirect documentation requests to swagger
 const openApiSpecification = swaggerJSDoc(swaggerOptions.options)
