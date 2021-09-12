@@ -1,9 +1,10 @@
 import { createStore } from 'vuex'
 
 export default createStore({
+  // Global variables across the client
   state: {
     restaurants: null,
-    about: null,
+    about: "",
     bookingForm: null,
     bookingFormShow: false,
     updateForm: null,
@@ -12,17 +13,26 @@ export default createStore({
     reservationsShow: false,
     errors: null,
     notificationsShow: "",
-    notifications: [{ "msg": "Successfully created reservation", "item": { "_id": "613d6379aeb6f800465a36f0", "restaurant": "subway", "name": "Steveee", "date_reserved": "2021-09-10T00:00:00.000Z", "seats": 3, "contact": { "phone_number": "0499999990" }, "client_id": "613d6379aeb6f800465a36f1", "date_created": "2021-09-12T02:18:33.296Z", "__v": 0 } }]
+    notifications: []
 
   },
+  // Mutation functions for dynamic web-interface
   mutations: {
-    setRestaurants(state, restaurants) {
-      state.restaurants = restaurants
-      state.about = restaurants[0]
+    // Simple fetch request, then update data
+    setRestaurants(state) {
+      fetch('http://localhost:3000/restaurants')
+        .then(async res => await res.json())
+        .then(data => {
+          state.restaurants = data
+          state.about = data[0]
+        }).catch(err => console.error(err))
+
     },
+    // Update reservation data after a fetch
     setReservations(state, reservations) {
       state.reservations = reservations.all_reservations
     },
+    // Allows dynamic changing of the about tile on the website
     updateAbout(state, payload) {
       state.bookingFormShow = false;
       state.restaurants.forEach(el => {
@@ -31,10 +41,12 @@ export default createStore({
         }
       });
     },
+    // Fill in booking form details
     updateBookingForm(state, payload) {
       state.bookingForm = payload
       state.bookingFormShow = true
     },
+    // Post a new reservation to the database
     newReservation(state, payload) {
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
@@ -60,6 +72,7 @@ export default createStore({
         })
         .catch(err => console.error("Error", err))
     },
+    // Delete a new reservation from the database
     removeReservation(state, payload) {
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
@@ -81,6 +94,7 @@ export default createStore({
           }
         })
     },
+    // Fill edit form with details from reservation
     editReservation(state, payload) {
       let found = false
       state.reservations.forEach(r => {
@@ -95,6 +109,7 @@ export default createStore({
       if (!found)
         console.log("Error: Cannot find reservation, cannot edit")
     },
+    // Put the updates into the reservation on the database
     updateReservation(state, payload) {
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
@@ -119,7 +134,7 @@ export default createStore({
           }
         })
     },
-    // Validates the form inputs
+    // Validates the form inputs (not used properly)
     validate() {
       "use strict";
 
@@ -139,7 +154,8 @@ export default createStore({
               event.stopPropagation();
               // console.log(document.getElementById("first-name").value);
               // console.log(document.getElementById("phone-number").value);
-              // console.log(document.getElementById("number-of-people").value);
+              // console.log(document.getElementById("number-of-people").
+              // value);
             }
 
             form.classList.add("was-validated");
@@ -148,6 +164,7 @@ export default createStore({
         );
       });
     },
+    // Toggles the notification dropdown
     notificationsToggle(state) {
       console.log("toggle")
       if (state.notificationsShow == "show") {
@@ -156,6 +173,7 @@ export default createStore({
         state.notificationsShow = "show"
       }
     },
+    // Connects to the database via EventSource to get live notifications
     notificationEvents(state) {
       const url = 'http://localhost:3000/reservations/notification'
       const sse = new EventSource(url)
@@ -164,13 +182,14 @@ export default createStore({
         state.notifications.push(JSON.parse(e.data))
         console.log('reservationAdded')
         console.log(e.data)
-        // write your own code to render the data in the UI component(s) when you
-        // ...
+        // write your own code to render the data in the UI 
+        // component(s) when you
       })
       /* The event "message" is a special case when the event does not have an
       event field. It does not handle the case of `event: message`, as the event
       has a event field. Listening to "message" event is equivalent to using the
-      onmessage property <https://developer.mozilla.org/enUS/docs/Web/API/EventSource/onmessage>*/
+      onmessage property 
+      <https://developer.mozilla.org/enUS/docs/Web/API/EventSource/onmessage>*/
       sse.addEventListener("message", (e) => {
         console.log('MESSAGE')
         console.log(e.data)
@@ -179,11 +198,7 @@ export default createStore({
   },
   actions: {
     initRestaurants({ commit }) {
-      fetch('http://localhost:3000/restaurants')
-        .then(res => res.json())
-        .then(data => {
-          commit('setRestaurants', data);
-        }).catch(err => console.error(err))
+      commit('setRestaurants');
     },
     getReservations({ commit }) {
       fetch('http://localhost:3000/reservations')

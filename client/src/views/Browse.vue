@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="browse">
     <div class="container-fluid">
       <div class="row">
         <div class="col">
@@ -27,12 +27,7 @@
               :id="i.id"
             />
           </div>
-          <AboutRestaurant
-            :title="this.$store.state.about.title"
-            :info="this.$store.state.about.info"
-            :img="this.$store.state.about.img"
-            :dates="this.$store.state.about.dates"
-          />
+          <AboutRestaurant />
         </div>
       </div>
     </div>

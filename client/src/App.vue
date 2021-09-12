@@ -37,6 +37,7 @@
                   href="#reservation-modal"
                   data-bs-toggle="modal"
                   data-bs-target="#reservation-modal"
+                  id="reservationsBtn"
                   @click="this.$store.state.reservationsShow = true"
                 >
                   Reservations</a
@@ -52,7 +53,7 @@
               <button
                 class="btn btn-secondary dropdown-toggle"
                 type="button"
-                id="dropdownMenu2"
+                id="notificationsBtn"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
                 @click="this.$store.dispatch('notificationsToggle')"
@@ -82,27 +83,6 @@
     <Reservations v-if="this.$store.state.reservationsShow" />
     <BookingForm v-if="this.$store.state.bookingFormShow" />
     <UpdateForm v-if="this.$store.state.updateFormShow" />
-    <div
-      aria-live="polite"
-      aria-atomic="true"
-      style="position: relative; min-height: 200px"
-    >
-      <div class="toast" style="position: absolute; top: 0; right: 0">
-        <div class="toast-header">
-          <strong class="mr-auto">Bootstrap</strong>
-          <small>11 mins ago</small>
-          <button
-            type="button"
-            class="ml-2 mb-1 close"
-            data-dismiss="toast"
-            aria-label="Close"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="toast-body">Hello, world! This is a toast message.</div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -110,27 +90,6 @@
 @import "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css";
 @import "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css";
 @import "css/styles.css";
-
-// #app {
-//   font-family: Avenir, Helvetica, Arial, sans-serif;
-//   -webkit-font-smoothing: antialiased;
-//   -moz-osx-font-smoothing: grayscale;
-//   text-align: center;
-//   color: #2c3e50;
-// }
-
-// #nav {
-//   padding: 30px;
-
-//   a {
-//     font-weight: bold;
-//     color: #2c3e50;
-
-//     &.router-link-exact-active {
-//       color: #42b983;
-//     }
-//   }
-// }
 </style>
 
 <script>
@@ -148,9 +107,6 @@ export default {
   },
   data() {
     return {};
-  },
-  methods: {
-    showModal() {},
   },
   created() {
     this.$store.dispatch("initRestaurants");

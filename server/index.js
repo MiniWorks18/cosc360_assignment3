@@ -4,7 +4,8 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
-const { MONGO_IP, MONGO_PORT, MONGO_USERNAME, MONGO_PASSWORD, PORT } = require("./config/config");
+const { MONGO_IP, MONGO_PORT, MONGO_USERNAME, MONGO_PASSWORD, PORT }
+  = require("./config/config");
 const app = express();
 
 const chatty = require('./services/status')
@@ -54,10 +55,7 @@ const wsServer = new WebSocketServer({
   autoAcceptConnections: false
 })
 
-
-
-// app.listen(PORT, () => console.log(`Express is listening on port ${PORT}!`))
-
+// Redirect reservation traffic to reservation router
 const reservationRouter = require('./routes/reservation');
 app.use('/reservations', reservationRouter);
 
@@ -108,13 +106,15 @@ module.exports = {
 const openApiSpecification = swaggerJSDoc(swaggerOptions.options)
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(openApiSpecification))
 
+// Hard coded restaurant data values, sent straight to the client side
 const restaurants = [
   {
     title: "Boost",
     info: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, \
     sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. \
-    A condimentum vitae sapien pellentesque habitant morbi tristique senectus et. \
-    Mi bibendum neque egestas congue. Lectus quam id leo in vitae turpis massa.",
+    Nullam non nisi est sit amet facilisis. Elit duis tristique sollicitudin\
+     nibh. Lobortis elementum nibh tellus molestie nunc non blandit \
+     massa enim.",
     img: "boost.jpg",
     id: 1,
     dates:
@@ -123,10 +123,11 @@ const restaurants = [
   },
   {
     title: "McDonalds",
-    info: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod \
-    tempor incididunt ut labore et dolore magna aliqua. Nullam non nisi est sit amet \
-    facilisis. Elit duis tristique sollicitudin nibh. Lobortis elementum nibh tellus \
-    molestie nunc non blandit massa enim.",
+    info: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, \
+    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. \
+    Nullam non nisi est sit amet facilisis. Elit duis tristique sollicitudin\
+     nibh. Lobortis elementum nibh tellus molestie nunc non blandit \
+     massa enim.",
     img: "mcdonalds.png",
     id: 2,
     dates:

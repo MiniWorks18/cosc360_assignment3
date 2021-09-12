@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="notificationsDropdown">
     <hr v-if="num > 0" />
     <div
       class=""
@@ -36,6 +36,7 @@ export default {
     },
   },
   methods: {
+    //   Gets proper date formatting
     getDate(date) {
       let d = new Date(date);
       let format =

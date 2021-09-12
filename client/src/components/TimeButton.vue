@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="btn btn-primary btn-sm m-1"
+    class="time-button btn btn-primary btn-sm m-1"
     data-bs-toggle="modal"
     data-bs-target="#reservationModal"
     data-bs-whatever="@getbootstrap"

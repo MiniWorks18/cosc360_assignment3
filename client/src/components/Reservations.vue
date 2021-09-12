@@ -42,6 +42,7 @@
                     <button
                       class="btn btn-outline-danger removebtn"
                       type="button"
+                      id="deleteReservation"
                       aria-expanded="false"
                       aria-controls="removed"
                       @click="remove(i._id)"
@@ -69,6 +70,7 @@
           </div>
           <div class="modal-footer">
             <button
+              id="reservationsClose"
               type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal"

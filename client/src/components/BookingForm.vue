@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-open">
+  <div id="bookingForm" class="modal-open">
     <div class="modal-backdrop fade show"></div>
     <div
       class="modal fade show"
@@ -105,6 +105,7 @@
               </button>
               <button
                 type="button"
+                id="bookingFormSave"
                 data-bs-target="#reservationModal"
                 class="btn btn-primary"
                 @click="submit()"
