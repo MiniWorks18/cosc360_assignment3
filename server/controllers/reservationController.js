@@ -11,8 +11,8 @@ const sendEvents = (newReservation) => {
         .write(`event: reservationAdded\ndata: ${JSON.stringify(newReservation)}\n\n`))
 }
 
+// Processes a reservation and updates the status to confirmed after 5 seconds
 function process(id) {
-
     setTimeout(() => {
         let updated = Reservation.findOneAndUpdate({
             '_id': id
@@ -46,7 +46,6 @@ exports.reservationAddedNotification = (req, res) => {
         res
     };
     clients.push(newClient);
-    // clients.forEach(client => console.log(client))
     res.on('close', () => console.log(`connection closed!`));
 }
 

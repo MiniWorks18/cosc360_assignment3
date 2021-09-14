@@ -175,7 +175,7 @@ export default createStore({
     notificationEvents(state) {
       const url = 'http://localhost:3000/reservations/notification'
       const sse = new EventSource(url)
-      /* To listen to the named event "stockAdded" */
+      /* To listen to the named event "reservationAdded" */
       sse.addEventListener("reservationAdded", (e) => {
         state.notifications.push(JSON.parse(e.data))
       })
