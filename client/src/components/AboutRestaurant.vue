@@ -24,9 +24,16 @@ export default {
   components: {
     TimeSheet,
   },
+  props: {
+    img: {
+      type: String,
+      require: true,
+    },
+  },
   methods: {
     getImgURL() {
-      return require("@/assets/" + this.$store.state.about.img);
+      let image = this.$store.state.about.img;
+      return require("@/assets/" + image);
     },
   },
 };

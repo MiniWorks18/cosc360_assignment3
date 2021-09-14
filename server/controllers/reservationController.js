@@ -11,6 +11,28 @@ const sendEvents = (newReservation) => {
         .write(`event: reservationAdded\ndata: ${JSON.stringify(newReservation)}\n\n`))
 }
 
+function process(id) {
+
+    setTimeout(() => {
+        let updated = Reservation.findOneAndUpdate({
+            '_id': id
+        },
+            {
+                'status': "Confirmed"
+            }).exec();
+        let response = {
+            "type": "rUpdate",
+            "msg": "New data, update reservations"
+        }
+        if (updated) {
+            clients.forEach(client => client.res
+                .write(`event: rUpdate\ndata: ${JSON.stringify(response)}\n\n`))
+
+        }
+    }, 5000, id)
+
+}
+
 // Notification endpoint, sends updates to clients
 exports.reservationAddedNotification = (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080')
@@ -52,7 +74,8 @@ exports.create_reservation = async (req, res) => {
             seats: req.body.seats,
             contact: { phone_number: req.body.phone_number },
             special_requests: req.body.special_requests,
-            client_id: req.body.client_id
+            client_id: req.body.client_id,
+            status: "Processing"
 
         });
         // Checks if a reservation of this name or date or restaurant has 
@@ -78,7 +101,7 @@ exports.create_reservation = async (req, res) => {
                 "item": output_reservation
             }
             if (output_reservation) {
-                /// Up to here, going to implement a notifications system using websockets
+                process(reservation._id);
                 res.status(201).json(response)
                 return sendEvents(response)
             }
@@ -149,7 +172,8 @@ exports.update_reservation = async (req, res) => {
                 'seats': req.body.seats,
                 'contact': {
                     'phone_number': req.body.phone_number
-                }
+                },
+                'special_requests': req.body.special_requests
             }).exec();
 
         if (upd_reservation) {

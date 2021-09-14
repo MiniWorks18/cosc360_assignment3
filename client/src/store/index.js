@@ -13,7 +13,8 @@ export default createStore({
     reservationsShow: false,
     errors: null,
     notificationsShow: "",
-    notifications: []
+    notifications: [],
+    isFetching: true
 
   },
   // Mutation functions for dynamic web-interface
@@ -23,8 +24,9 @@ export default createStore({
       fetch('http://localhost:3000/restaurants')
         .then(async res => await res.json())
         .then(data => {
-          state.restaurants = data
           state.about = data[0]
+          state.restaurants = data
+          state.isFetching = false
         }).catch(err => console.error(err))
 
     },
@@ -58,7 +60,7 @@ export default createStore({
       fetch('http://localhost:3000/reservations/', requestOptions)
         .then(async res => {
           const data = await res.json()
-          console.log(data)
+          // console.log(data)
           if (res.ok) {
             this.dispatch('getReservations')
             state.bookingFormShow = false
@@ -84,7 +86,7 @@ export default createStore({
       fetch('http://localhost:3000/reservations/', requestOptions)
         .then(async res => {
           const data = await res.json()
-          console.log(data)
+          // console.log(data)
           if (res.ok) {
             this.dispatch('getReservations')
           } else {
@@ -121,7 +123,7 @@ export default createStore({
       fetch('http://localhost:3000/reservations/', requestOptions)
         .then(async res => {
           const data = await res.json()
-          console.log(data)
+          // console.log(data)
           if (res.ok) {
             state.updateFormShow = false
             state.bookingFormShow = false
@@ -152,10 +154,6 @@ export default createStore({
             } else {
               event.preventDefault();
               event.stopPropagation();
-              // console.log(document.getElementById("first-name").value);
-              // console.log(document.getElementById("phone-number").value);
-              // console.log(document.getElementById("number-of-people").
-              // value);
             }
 
             form.classList.add("was-validated");
@@ -166,7 +164,7 @@ export default createStore({
     },
     // Toggles the notification dropdown
     notificationsToggle(state) {
-      console.log("toggle")
+      // console.log("toggle")
       if (state.notificationsShow == "show") {
         state.notificationsShow = ""
       } else {
@@ -180,19 +178,13 @@ export default createStore({
       /* To listen to the named event "stockAdded" */
       sse.addEventListener("reservationAdded", (e) => {
         state.notifications.push(JSON.parse(e.data))
-        console.log('reservationAdded')
-        console.log(e.data)
-        // write your own code to render the data in the UI 
-        // component(s) when you
       })
-      /* The event "message" is a special case when the event does not have an
-      event field. It does not handle the case of `event: message`, as the event
-      has a event field. Listening to "message" event is equivalent to using the
-      onmessage property 
-      <https://developer.mozilla.org/enUS/docs/Web/API/EventSource/onmessage>*/
       sse.addEventListener("message", (e) => {
         console.log('MESSAGE')
         console.log(e.data)
+      })
+      sse.addEventListener("rUpdate", () => {
+        this.dispatch('getReservations')
       })
     }
   },

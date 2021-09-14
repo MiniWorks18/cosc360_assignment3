@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <testsuites errors="0"
             failures="0"
-            tests="1">
+            tests="2">
 
   <testsuite name="home.test"
     errors="0" failures="0" hostname="" id="" package="home.test" skipped="0"
-    tests="1" time="5.020" timestamp="">
+    tests="2" time="12.42" timestamp="">
   
-    <testcase name="database test" classname="home.test" time="5.020" assertions="6">
+    <testcase name="loaded test" classname="home.test" time="2.556" assertions="3">
+
+    
+
+    
+
+    
+    </testcase>
+  
+    <testcase name="database and notification test" classname="home.test" time="9.863" assertions="6">
 
     
 

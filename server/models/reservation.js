@@ -22,7 +22,8 @@ const ReservationSchema = new Schema({
         require: true
     },
     special_requests: {
-        type: String
+        type: String,
+        reqiore: true
     },
     date_created: {
         type: Date,
@@ -51,6 +52,10 @@ const ReservationSchema = new Schema({
         type: mongoose.Types.ObjectId,
         require: true,
         default: mongoose.Types.ObjectId
+    },
+    status: {
+        type: String,
+        require: true
     }
 });
 module.exports = mongoose.model('Reservation', ReservationSchema);

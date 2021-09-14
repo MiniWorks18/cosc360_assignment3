@@ -139,6 +139,7 @@ export default {
           seats: ppl,
           time: date + time,
           date_reserved: date,
+          special_requests: spc,
         });
         this.$store.dispatch("newReservation", payload);
       }

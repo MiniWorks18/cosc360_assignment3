@@ -34,6 +34,8 @@
                   <th scope="col">Name</th>
                   <th scope="col">Time</th>
                   <th scope="col">Seats</th>
+                  <th scope="col">Requests</th>
+                  <th scope="col">Status</th>
                 </tr>
               </thead>
               <tbody id="reserve-tbody">
@@ -64,6 +66,11 @@
                     {{ getDate(i.date_reserved) }}
                   </td>
                   <td>{{ i.seats }}</td>
+                  <td v-if="i.special_requests.length != ''">
+                    {{ i.special_requests }}
+                  </td>
+                  <td v-else>N/A</td>
+                  <td>{{ i.status }}</td>
                 </tr>
               </tbody>
             </table>

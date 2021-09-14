@@ -27,7 +27,10 @@
               :id="i.id"
             />
           </div>
-          <AboutRestaurant />
+          <AboutRestaurant
+            v-if="this.$store.state.about.length != 0"
+            :img="this.$store.state.about.img"
+          />
         </div>
       </div>
     </div>

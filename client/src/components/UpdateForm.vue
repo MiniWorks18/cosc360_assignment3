@@ -73,20 +73,6 @@
                     >
                       {{ i }}
                     </option>
-                    <!-- <option value="2" selected>2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
-                    <option value="13">13</option>
-                    <option value="14">14</option>
-                    <option value="15">15</option> -->
                   </select>
                   <div class="invalid-feedback">* Required!</div>
                 </div>
@@ -97,9 +83,9 @@
                   <textarea
                     class="form-control"
                     aria-label="With textarea"
-                    id="special-requests"
-                    :value="this.$store.state.updateForm.special"
-                  ></textarea>
+                    id="allergies"
+                    :value="this.$store.state.updateForm.special_requests"
+                  />
                 </div>
               </div>
               <button
@@ -132,10 +118,10 @@ export default {
       let nam = document.getElementById("first-name").value;
       let num = document.getElementById("phone-number").value;
       let ppl = document.getElementById("number-of-people").value;
-      let spc = document.getElementById("special-requests").value;
+      let spc = document.getElementById("allergies").value;
       let time = this.$store.state.updateForm[0];
       let date = this.$store.state.updateForm[1];
-      nam, num, ppl, spc, time, date;
+      console.log(spc);
 
       if (this.validate(nam, num, time, date) == 1) {
         let payload = JSON.stringify({
@@ -146,6 +132,7 @@ export default {
           seats: ppl,
           time: time,
           date_reserved: date,
+          special_requests: spc,
         });
         this.$store.dispatch("updateReservation", payload);
       }
